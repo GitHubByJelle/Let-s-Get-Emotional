@@ -55,18 +55,20 @@ def test(network, loader, validation=True):
 
 if __name__ == '__main__':
     ###### VARIABLES TO CHANGE
-    plotData, plotResult, plotTraining = True, True, True
+    plotData, plotResult, plotTraining, showConvolutionLayer = False, False, True, True
+    saveNetwork = False
     batchsize = 25
-    interval = 5
-    n_epochs = 5
+    interval = 10
+    n_epochs = 25
     learning_rate = 0.001
-    network = nets.ExampleNet3()
+    decay = 1e-5
+    network = nets.ConvNet()
 
     # Define loader (normal, balanced or transform)
-    trainloader, valloader, testloader, plotloader = loaders.make_balanced_loader(batchsize)
+    trainloader, valloader, testloader, plotloader = loaders.make_balanced_transform_loader(batchsize, True)
 
     # Define optimizer
-    optimizer = optim.Adam(network.parameters(), lr=learning_rate)
+    optimizer = optim.Adam(network.parameters(), lr=learning_rate, weight_decay=decay)
 
     ###### START NETWORK
     # Show network
@@ -96,6 +98,10 @@ if __name__ == '__main__':
     # Test on test network
     test(network, testloader, validation=False)
 
+    # Save model
+    if saveNetwork:
+        torch.save(network, '{}_nepoch{}_lr{}_batchsize{}.pth'.format(network.__class__.__name__ ,n_epochs, learning_rate, batchsize))
+
     # Visualise test set
     if plotResult:
         visualiser.testshow(testloader,network,4,4,classes)
@@ -104,3 +110,6 @@ if __name__ == '__main__':
     if plotTraining:
         visualiser.plot_training(train_counter, train_losses, train_accuracy,
                                  valid_counter, valid_losses, valid_accuracy)
+
+    if showConvolutionLayer:
+        visualiser.show_convolution_layers('ConvNet_nepoch25_lr0.001_batchsize25.pth', trainloader)
