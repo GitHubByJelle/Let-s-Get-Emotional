@@ -1,5 +1,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
+import torch
 
 class ExampleNet(nn.Module):
     def __init__(self):
@@ -40,178 +41,104 @@ class ExampleNet(nn.Module):
 
         return t
 
-class ExampleNet2(nn.Module):
+class ExampleNet3(nn.Module):
     def __init__(self):
-        super(ExampleNet2, self).__init__()
-        self.conv2d_1 = nn.Conv2d(in_channels=1, out_channels=64, kernel_size=5)
-        self.batchnorm_1 = nn.BatchNorm2d(64)
-        self.conv2d_2 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=5)
-        self.batchnorm_2 = nn.BatchNorm2d(64)
-        self.dropout_1 = nn.Dropout2d(p=.4)
+        super(ExampleNet3, self).__init__()
+        self.layer1 = nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5),
+            nn.BatchNorm2d(4),
+            nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5),
+            nn.BatchNorm2d(4),
+            nn.MaxPool2d(2),
+            nn.Dropout2d(p=.4)
+        )
 
-        self.conv2d_3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3)
-        self.batchnorm_3 = nn.BatchNorm2d(128)
-        self.conv2d_4 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3)
-        self.batchnorm_4 = nn.BatchNorm2d(128)
-        self.dropout_2 = nn.Dropout2d(p=.4)
+        self.layer2 = nn.Sequential(
+            nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3),
+            nn.BatchNorm2d(8),
+            nn.Conv2d(in_channels=8, out_channels=8, kernel_size=3),
+            nn.BatchNorm2d(8),
+            nn.MaxPool2d(2),
+            nn.Dropout2d(p=.4)
+        )
 
-        self.conv2d_5 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3)
-        self.batchnorm_5 = nn.BatchNorm2d(256)
-        self.conv2d_6 = nn.Conv2d(in_channels=256, out_channels=256, kernel_size=3)
-        self.batchnorm_6 = nn.BatchNorm2d(256)
-        self.dropout_3 = nn.Dropout2d()
+        self.layer3 = nn.Sequential(
+            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3),
+            nn.BatchNorm2d(16),
+            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=3),
+            nn.BatchNorm2d(16),
+            nn.MaxPool2d(2),
+            nn.Dropout2d()
+        )
 
-        self.linear1 = nn.Linear(in_features=256*2*2,out_features=128)
-        self.batchnorm_7 = nn.BatchNorm1d(128)
-        self.dropout_4 = nn.Dropout2d(p=.6)
+        self.layer4 = nn.Sequential(
+            nn.Linear(in_features=16*2*2,out_features=32),
+            nn.BatchNorm1d(32),
+            nn.Dropout2d(p=.6)
+        )
 
-        self.linear2 = nn.Linear(in_features=128, out_features=7)
+        self.output = nn.Linear(in_features=32, out_features=7)
 
     def forward(self, x):
-        # (1) input layer
-        x = x
+        # (1) Layer 1 - Conv, batchnorm, conv, batchnorm, dropout
+        x = self.layer1(x)
 
-        # (2) hidden conv layer (block 1)
-        x = self.conv2d_1(x)
-        x = F.elu(x)
-        x = self.batchnorm_1(x)
+        # (2) Layer 2 - Conv, batchnorm, conv, batchnorm, dropout
+        x = self.layer2(x)
 
-        # (3) hidden conv layer (block 1)
-        x = self.conv2d_2(x)
-        x = F.elu(x)
-        x = self.batchnorm_2(x)
+        # (3) Layer 3 - Conv, batchnorm, conv, batchnorm, dropout
+        x = self.layer3(x)
 
-        # (4) end block 1
-        x = F.max_pool2d(x, kernel_size=2)
-        x = self.dropout_1(x)
+        # (4) Layer 4 - Linear, batch norm, dropout
+        x = x.reshape(x.size(0),-1)
+        x = self.layer4(x)
 
-        # (5) hidden conv layer (block 2)
-        x = self.conv2d_3(x)
-        x = F.elu(x)
-        x = self.batchnorm_3(x)
-
-        # (6) hidden conv layer (block 2)
-        x = self.conv2d_4(x)
-        x = F.elu(x)
-        x = self.batchnorm_4(x)
-
-        # (7) end block 2
-        x = F.max_pool2d(x, kernel_size=2)
-        x = self.dropout_2(x)
-
-        # (8) hidden conv layer (block 3)
-        x = self.conv2d_5(x)
-        x = F.elu(x)
-        x = self.batchnorm_5(x)
-
-        # (9) hidden conv layer (block 3)
-        x = self.conv2d_6(x)
-        x = F.elu(x)
-        x = self.batchnorm_6(x)
-
-        # (10) end block 3
-        x = F.max_pool2d(x, kernel_size=2)
-        x = self.dropout_3(x)
-
-        # (11) Linear layer
-        x = x.reshape(-1, 256*2*2)
-        x = self.linear1(x)
-        x = self.batchnorm_7(x)
-        x = self.dropout_4(x)
-
-        # Output layer
-        x = self.linear2(x)
+        # (5) output
+        x = self.output(x)
         x = F.softmax(x, dim=1)
 
         return x
 
-class ExampleNet3(nn.Module):
+class ConvNet(nn.Module):
     def __init__(self):
-        super(ExampleNet3, self).__init__()
-        self.conv2d_1 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=5)
-        self.batchnorm_1 = nn.BatchNorm2d(4)
-        self.conv2d_2 = nn.Conv2d(in_channels=4, out_channels=4, kernel_size=5)
-        self.batchnorm_2 = nn.BatchNorm2d(4)
-        self.dropout_1 = nn.Dropout2d(p=.4)
+        super(ConvNet, self).__init__()
 
-        self.conv2d_3 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3)
-        self.batchnorm_3 = nn.BatchNorm2d(8)
-        self.conv2d_4 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=3)
-        self.batchnorm_4 = nn.BatchNorm2d(8)
-        self.dropout_2 = nn.Dropout2d(p=.4)
+        self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
+                                    nn.BatchNorm2d(10),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
 
-        self.conv2d_5 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3)
-        self.batchnorm_5 = nn.BatchNorm2d(16)
-        self.conv2d_6 = nn.Conv2d(in_channels=16, out_channels=16, kernel_size=3)
-        self.batchnorm_6 = nn.BatchNorm2d(16)
-        self.dropout_3 = nn.Dropout2d()
+        self.layer2 = nn.Sequential(nn.Conv2d(10,20, kernel_size=4),
+                                    nn.BatchNorm2d(20),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
 
-        self.linear1 = nn.Linear(in_features=16*2*2,out_features=32)
-        self.batchnorm_7 = nn.BatchNorm1d(32)
-        self.dropout_4 = nn.Dropout2d(p=.6)
-
-        self.linear2 = nn.Linear(in_features=32, out_features=24)
-
-        self.linear3 = nn.Linear(in_features=24, out_features=7)
+        self.fc = nn.Linear(1620, 7)
 
     def forward(self, x):
-        # (1) input layer
-        x = x
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
 
-        # (2) hidden conv layer (block 1)
-        x = self.conv2d_1(x)
-        x = F.elu(x)
-        x = self.batchnorm_1(x)
-
-        # (3) hidden conv layer (block 1)
-        x = self.conv2d_2(x)
-        x = F.elu(x)
-        x = self.batchnorm_2(x)
-
-        # (4) end block 1
-        x = F.max_pool2d(x, kernel_size=2)
-        x = self.dropout_1(x)
-
-        # (5) hidden conv layer (block 2)
-        x = self.conv2d_3(x)
-        x = F.elu(x)
-        x = self.batchnorm_3(x)
-
-        # (6) hidden conv layer (block 2)
-        x = self.conv2d_4(x)
-        x = F.elu(x)
-        x = self.batchnorm_4(x)
-
-        # (7) end block 2
-        x = F.max_pool2d(x, kernel_size=2)
-        x = self.dropout_2(x)
-
-        # (8) hidden conv layer (block 3)
-        x = self.conv2d_5(x)
-        x = F.elu(x)
-        x = self.batchnorm_5(x)
-
-        # (9) hidden conv layer (block 3)
-        x = self.conv2d_6(x)
-        x = F.elu(x)
-        x = self.batchnorm_6(x)
-
-        # (10) end block 3
-        x = F.max_pool2d(x, kernel_size=2)
-        x = self.dropout_3(x)
-
-        # (11) Linear layer
-        x = x.reshape(-1, 16*2*2)
-        x = self.linear1(x)
-        x = self.batchnorm_7(x)
-        x = self.dropout_4(x)
-
-        # (12) Linear layer
-        x = self.linear2(x)
-        x = F.relu(x)
-
-        # (13) Linear Layer
-        x = self.linear3(x)
+        x = self.fc(x)
         x = F.softmax(x, dim=1)
+        return(x)
 
+class Net(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = torch.flatten(x, 1) # flatten all dimensions except batch
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
         return x
