@@ -63,7 +63,7 @@ if __name__ == '__main__':
     network = nets.ExampleNet3()
 
     # Define loader (normal, balanced or transform)
-    trainloader, valloader, testloader, plotloader = loaders.make_transform_loader(batchsize)
+    trainloader, valloader, testloader, plotloader = loaders.make_balanced_loader(batchsize)
 
     # Define optimizer
     optimizer = optim.Adam(network.parameters(), lr=learning_rate)

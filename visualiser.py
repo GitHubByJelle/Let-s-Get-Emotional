@@ -38,8 +38,6 @@ def testshow(loader, network, n, m, classes):
     output = network(data)
     pred = output.data.max(1, keepdim=True)[1]
 
-    print(data.shape,output.shape,pred.shape)
-
     # Adjust parameters
     n = n if n*m < data.shape[0] else int(data.shape[0]**.5)
     m = m if n*m < data.shape[0] else int(data.shape[0]**.5)
