@@ -3,7 +3,9 @@ import numpy as np
 import torch
 import torchvision
 from torch import nn
-
+from torchviz import make_dot
+import os
+os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 
 def trainshow(loader, n, m, classes):
     # Get data
@@ -141,6 +143,7 @@ def show_convolution_layers(model_path, loader):
     dataiter = iter(loader)
     data, label = dataiter.next()
 
+    # Get images
     img = data[0:3, :, :, :]
 
     # pass the image through all the layers
@@ -169,3 +172,21 @@ def show_convolution_layers(model_path, loader):
         # plt.show()
         # plt.close()
         plt.show()
+
+def visualise_network(path, loader):
+    """
+    Be sure that GraphViz is installed on your OP (and added to your path). And be sure that the package is installed.
+    :param path: path to network file after training
+    :param loader: dataloader
+    :return: png image of network (gets saved)
+    """
+    # Get data
+    dataiter = iter(loader)
+    data, label = dataiter.next()
+
+    # Get output
+    network = torch.load(path)
+    out = network(data)
+
+    # Make visualisation
+    make_dot(out, params=dict(network.named_parameters()), show_attrs=True).render(path.rstrip('.pth'), format="png")

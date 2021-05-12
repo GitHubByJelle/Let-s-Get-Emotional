@@ -55,8 +55,8 @@ def test(network, loader, validation=True):
 
 if __name__ == '__main__':
     ###### VARIABLES TO CHANGE
-    plotData, plotResult, plotTraining, showConvolutionLayer = False, False, True, True
-    saveNetwork = False
+    plotData, plotResult, plotTraining, showConvolutionLayer = False, False, True, False
+    saveNetwork = True
     batchsize = 25
     interval = 10
     n_epochs = 25
