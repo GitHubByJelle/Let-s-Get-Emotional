@@ -74,16 +74,16 @@ def determine_performance(network, loader):
 
 if __name__ == '__main__':
     ###### VARIABLES TO CHANGE
+    network = nets.ConvNet()
+
     plotData, plotResult, plotTraining, showConvolutionLayer = False, False, True, False
     saveNetwork = True
     batchsize = 25
     interval = 10
-    n_epochs = 25
+    n_epochs = 15
     learning_rate = 0.001
     decay = 1e-5
-    network = nets.ConvNet()
-    name = "ConvNet"
-    loader_type = 'balancedtransform' # Options: [balancedtransform, transform, normal, small]
+    loader_type = 'balanced' # Options: [balancedtransform, transform, balanced, normal, small]
 
     # Define loader (normal, balanced or transform)
     if loader_type == 'balancedtransform': # Data will be balanced and horizontally flipped
@@ -140,14 +140,16 @@ if __name__ == '__main__':
 
     # Plot training progress
     if plotTraining:
-        title = r"$\bf{""Network:""}$"       + str(name)         + ' ' * 3 + \
+        title = r"$\bf{""Network:""}$"       + str(network.__class__.__name__)         + ' ' * 3 + \
             r"$\bf{""batchsize:""}$"     + str(batchsize)    + ' ' * 3 + \
             r"$\bf{""interval:""}$"      + str(interval)     + ' ' * 3 + \
             r"$\bf{""n-epochs:""}$"      + str(n_epochs)     + ' ' * 3 + \
             r"$\bf{""learning-rate:""}$" + str(learning_rate)
         visualiser.plot_training(train_counter, train_losses, train_accuracy,
                                  valid_counter, valid_losses, valid_accuracy,
-                                 title)
+                                 title, 'training_{}_nepoch{}_lr{}_batchsize{}_loader{}.png'.format(network.__class__.__name__ ,
+                                                                               n_epochs, learning_rate, batchsize,
+                                                                               loader_type))
 
     if showConvolutionLayer:
         visualiser.show_convolution_layers('ConvNet_nepoch25_lr0.001_batchsize25.pth', trainloader)

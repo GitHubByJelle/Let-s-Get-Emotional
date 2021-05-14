@@ -63,8 +63,9 @@ def testshow(loader, network, n, m):
     plt.show()
 
 
-def plot_training(train_counter, train_losses, train_accuracy, valid_counter, valid_losses, valid_accuracy, title):
-    fig, ax = plt.subplots(1, 2)
+def plot_training(train_counter, train_losses, train_accuracy, valid_counter, valid_losses, valid_accuracy, title,
+                  fn):
+    fig, ax = plt.subplots(1, 2, figsize=(15,7))
 
     # Loss function
     ax[0].plot(train_counter, train_losses, color='cornflowerblue', zorder=0)
@@ -83,6 +84,8 @@ def plot_training(train_counter, train_losses, train_accuracy, valid_counter, va
     ax[1].title.set_text('Accuracy')
 
     fig.suptitle(title)
+
+    plt.savefig(fn)
     plt.show()
 
 
@@ -168,29 +171,6 @@ def show_convolution_layers(model_path, loader):
                 break
             plt.subplot(np.ceil(layer_viz.size()[0] ** .5), np.ceil(layer_viz.size()[0] ** .5), i + 1)
             plt.imshow(filter, cmap='gray')
-            plt.axis("off")
-        plt.suptitle("Output of feature maps convolution layer {}".format(num_layer))
-        # print(f"Saving layer {num_layer} feature maps...")
-        # plt.savefig(f"../outputs/layer_{num_layer}.png")
-        # plt.show()
-        # plt.close()
-        plt.show()
-
-    # TODO TESSTTTTT
-    for num_layer in range(len(outputs)):
-        plt.figure(figsize=(30, 30))
-        layer_viz = outputs[num_layer][0, :, :, :]
-        layer_viz = layer_viz.data
-        for i, filter in enumerate(layer_viz):
-            if i == 64:  # limit on 64
-                break
-            plt.subplot(np.ceil(layer_viz.size()[0] ** .5), np.ceil(layer_viz.size()[0] ** .5), i + 1)
-
-            test = filter
-            threshold = .8
-            test = (test > threshold) * test + (test <= threshold) * test
-            print(test)
-            plt.imshow(test, cmap='gray')
             plt.axis("off")
         plt.suptitle("Output of feature maps convolution layer {}".format(num_layer))
         # print(f"Saving layer {num_layer} feature maps...")
