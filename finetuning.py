@@ -194,6 +194,8 @@ if loader_type == 'balanced_transform': # Data will be balanced and horizontally
     trainloader, valloader, testloader, plotloader = loaders.make_balanced_transform_loader(batch_size)
 elif loader_type == 'transform': # Transform, horizontally flipped and normalized
     trainloader, valloader, testloader, plotloader = loaders.make_transform_loader(batch_size)
+elif loader_type == 'balanced': # Balanced dataset
+    trainloader, valloader, testloader, plotloader = loaders.make_balanced_loader(batch_size)
 elif loader_type == 'normal': # Load the data as it is
     trainloader, valloader, testloader, plotloader = loaders.make_loader(batch_size)
 elif loader_type == 'small': # Small loader for tests

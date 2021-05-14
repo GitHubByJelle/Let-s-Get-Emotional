@@ -85,18 +85,13 @@ if __name__ == '__main__':
     name = "ConvNet"
     loader_type = 'balancedtransform' # Options: [balancedtransform, transform, normal, small]
 
-    title = r"$\bf{""Network:""}$"       + str(name)         + ' ' * 3 + \
-            r"$\bf{""batchsize:""}$"     + str(batchsize)    + ' ' * 3 + \
-            r"$\bf{""interval:""}$"      + str(interval)     + ' ' * 3 + \
-            r"$\bf{""n-epochs:""}$"      + str(n_epochs)     + ' ' * 3 + \
-            r"$\bf{""learning-rate:""}$" + str(learning_rate)
-
-
     # Define loader (normal, balanced or transform)
     if loader_type == 'balancedtransform': # Data will be balanced and horizontally flipped
         trainloader, valloader, testloader, plotloader = loaders.make_balanced_transform_loader(batchsize)
     elif loader_type == 'transform': # Transform, horizontally flipped and normalized
         trainloader, valloader, testloader, plotloader = loaders.make_transform_loader(batchsize)
+    elif loader_type == 'balanced': # Balanced dataset
+        trainloader, valloader, testloader, plotloader = loaders.make_balanced_loader(batchsize)
     elif loader_type == 'normal': # Load the data as it is
         trainloader, valloader, testloader, plotloader = loaders.make_loader(batchsize)
     elif loader_type == 'small': # Small loader for tests
@@ -120,8 +115,6 @@ if __name__ == '__main__':
     train_accuracy = []
     train_counter = []
     valid_counter = [i*len(trainloader.dataset) for i in range(n_epochs + 1)]
-
-
 
     # Train model
     test(network, valloader)
@@ -147,12 +140,14 @@ if __name__ == '__main__':
 
     # Plot training progress
     if plotTraining:
+        title = r"$\bf{""Network:""}$"       + str(name)         + ' ' * 3 + \
+            r"$\bf{""batchsize:""}$"     + str(batchsize)    + ' ' * 3 + \
+            r"$\bf{""interval:""}$"      + str(interval)     + ' ' * 3 + \
+            r"$\bf{""n-epochs:""}$"      + str(n_epochs)     + ' ' * 3 + \
+            r"$\bf{""learning-rate:""}$" + str(learning_rate)
         visualiser.plot_training(train_counter, train_losses, train_accuracy,
                                  valid_counter, valid_losses, valid_accuracy,
                                  title)
 
     if showConvolutionLayer:
         visualiser.show_convolution_layers('ConvNet_nepoch25_lr0.001_batchsize25.pth', trainloader)
-
-
-

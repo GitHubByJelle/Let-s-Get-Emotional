@@ -37,10 +37,22 @@ if __name__ == '__main__':
     #     print(i, submodule)
     #
     # # Or you can just print the network to get this info
-    data = recorder.data[3][0]
-    print(vars(recorder))
-    width, height = np.ceil(data.shape[1]**2), np.ceil(data.shape[1]**2)
+    # You can see all submodules and their positions by running this:
+    next = False
+    for i, submodule in enumerate(network.modules()):
+        if next:
+            data = recorder.data[i][0]
+            width, height = int(np.ceil(data.shape[1]**.5)), int(np.ceil(data.shape[1]**.5))
+            print(width)
 
-    for conv in range(data.shape[1]):
-        plt.imshow(data[0,conv,:,:].detach().numpy(), cmap='gray')
-        plt.show()
+            fig, ax = plt.subplots(width, height)
+            for r in range(height):
+                for c in range(width):
+                    if r * width + c < data.shape[1]:
+                        ax[r,c].imshow(data[0,r*width+c,:,:].detach().numpy(), cmap='gray')
+
+                    ax[r,c].axis('off')
+
+            plt.show()
+
+        next = type(submodule) == nn.Conv2d
