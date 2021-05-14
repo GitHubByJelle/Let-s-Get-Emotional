@@ -142,3 +142,7 @@ if __name__ == '__main__':
 
     if showConvolutionLayer:
         visualiser.show_convolution_layers('ConvNet_nepoch25_lr0.001_batchsize25.pth', trainloader)
+
+
+
+print("asd")
