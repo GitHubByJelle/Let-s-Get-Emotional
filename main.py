@@ -66,8 +66,6 @@ def determine_performance(network, loader):
      outputs = torch.cat(outputs, dim=0)
      targets = torch.cat(targets, dim=0)
 
-     print(outputs, targets)
-
      print("Accuracy: {:.4f}, Precision: {:.4f}. Recall: {:.4f}. F1-score: {:.4f}.\n".format(
                                                               accuracy_score(targets, outputs),
                                                               precision_score(targets, outputs, average='weighted'),
@@ -103,12 +101,9 @@ if __name__ == '__main__':
     # Show network
     print(network)
 
-    # Define classes
-    classes = {0:'anger',1:'disgust',2:'fear',3:'happiness',4:'sadness',5:'surprise',6:'neutral'}
-
     # Plot train data
     if plotData:
-        visualiser.trainshow(trainloader, 10, 10, classes)
+        visualiser.trainshow(trainloader, 10, 10)
 
     # Define lists for loss / accuracy measures
     valid_losses = []
@@ -138,7 +133,7 @@ if __name__ == '__main__':
 
     # Visualise test set
     if plotResult:
-        visualiser.testshow(testloader,network,4,4,classes)
+        visualiser.testshow(testloader,network,4,4)
 
     # Plot training progress
     if plotTraining:
