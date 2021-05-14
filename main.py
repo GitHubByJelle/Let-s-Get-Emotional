@@ -2,6 +2,8 @@ import torch
 import os
 import torch.nn.functional as F
 import torch.optim as optim
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
+
 import loaders
 import nets
 import visualiser
@@ -24,8 +26,6 @@ def train(epoch, network, loader, interval):
                 100. * batch_idx / len(loader),loss.item()))
             train_losses.append(loss.item())
             train_counter.append((batch_idx*batchsize) + ((epoch-1)*len(loader.dataset)))
-            # torch.save(network.state_dict(), '/results/model.pth')
-            # torch.save(optimizer.state_dict(), '/results/optimizer.pth')
     train_accuracy.append(100. * correct / len(loader.dataset))
 
 def test(network, loader, validation=True):
@@ -48,10 +48,31 @@ def test(network, loader, validation=True):
         valid_losses.append(test_loss)
         valid_accuracy.append(accuracy)
     else:
-        print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+        print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.format(
             test_loss, correct, len(loader.dataset),
             accuracy))
 
+def determine_performance(network, loader):
+     network.eval()
+     outputs = []
+     targets = []
+     with torch.no_grad():
+        for data, target in loader:
+            output = network(data)
+            pred = output.data.max(1, keepdim=False)[1]
+
+            outputs.append(pred)
+            targets.append(target)
+     outputs = torch.cat(outputs, dim=0)
+     targets = torch.cat(targets, dim=0)
+
+     print(outputs, targets)
+
+     print("Accuracy: {:.4f}, Precision: {:.4f}. Recall: {:.4f}. F1-score: {:.4f}.\n".format(
+                                                              accuracy_score(targets, outputs),
+                                                              precision_score(targets, outputs, average='weighted'),
+                                                              recall_score(targets, outputs, average='weighted'),
+                                                              f1_score(targets, outputs, average='weighted')))
 
 if __name__ == '__main__':
     ###### VARIABLES TO CHANGE
@@ -63,9 +84,17 @@ if __name__ == '__main__':
     learning_rate = 0.001
     decay = 1e-5
     network = nets.ConvNet()
+    loader_type = 'balancedtransform' # Options: [balancedtransform, transform, normal, small]
 
     # Define loader (normal, balanced or transform)
-    trainloader, valloader, testloader, plotloader = loaders.make_balanced_transform_loader(batchsize, True)
+    if loader_type == 'balancedtransform': # Data will be balanced and horizontally flipped
+        trainloader, valloader, testloader, plotloader = loaders.make_balanced_transform_loader(batchsize)
+    elif loader_type == 'transform': # Transform, horizontally flipped and normalized
+        trainloader, valloader, testloader, plotloader = loaders.make_transform_loader(batchsize)
+    elif loader_type == 'normal': # Load the data as it is
+        trainloader, valloader, testloader, plotloader = loaders.make_loader(batchsize)
+    elif loader_type == 'small': # Small loader for tests
+        trainloader, valloader, testloader, plotloader = loaders.make_loader_small(batchsize)
 
     # Define optimizer
     optimizer = optim.Adam(network.parameters(), lr=learning_rate, weight_decay=decay)
@@ -98,9 +127,14 @@ if __name__ == '__main__':
     # Test on test network
     test(network, testloader, validation=False)
 
+    # Print performance
+    determine_performance(network, testloader)
+
     # Save model
     if saveNetwork:
-        torch.save(network, '{}_nepoch{}_lr{}_batchsize{}.pth'.format(network.__class__.__name__ ,n_epochs, learning_rate, batchsize))
+        torch.save(network, '{}_nepoch{}_lr{}_batchsize{}_loader{}.pth'.format(network.__class__.__name__ ,
+                                                                               n_epochs, learning_rate, batchsize,
+                                                                               loader_type))
 
     # Visualise test set
     if plotResult:
