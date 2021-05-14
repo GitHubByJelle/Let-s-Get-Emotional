@@ -63,7 +63,7 @@ def testshow(loader, network, n, m):
     plt.show()
 
 
-def plot_training(train_counter, train_losses, train_accuracy, valid_counter, valid_losses, valid_accuracy):
+def plot_training(train_counter, train_losses, train_accuracy, valid_counter, valid_losses, valid_accuracy, title):
     fig, ax = plt.subplots(1, 2)
 
     # Loss function
@@ -82,6 +82,7 @@ def plot_training(train_counter, train_losses, train_accuracy, valid_counter, va
     ax[1].set_ylabel('Accuracy')
     ax[1].title.set_text('Accuracy')
 
+    fig.suptitle(title)
     plt.show()
 
 

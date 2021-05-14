@@ -142,3 +142,29 @@ class Net(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
+
+
+class CanNet(nn.Module):
+    def __init__(self):
+        super(ConvNet, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
+                                    nn.BatchNorm2d(10),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(10,20, kernel_size=4),
+                                    nn.BatchNorm2d(20),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.fc = nn.Linear(1620, 7)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
