@@ -99,9 +99,9 @@ class ExampleNet3(nn.Module):
 
         return x
 
-class ConvNet(nn.Module):
+class JNet1(nn.Module):
     def __init__(self):
-        super(ConvNet, self).__init__()
+        super(JNet1, self).__init__()
 
         self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
                                     nn.BatchNorm2d(10),
@@ -146,7 +146,7 @@ class Net(nn.Module):
 
 class CanNet(nn.Module):
     def __init__(self):
-        super(ConvNet, self).__init__()
+        super(CanNet, self).__init__()
 
         self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
                                     nn.BatchNorm2d(10),
@@ -168,3 +168,235 @@ class CanNet(nn.Module):
         x = self.fc(x)
         x = F.softmax(x, dim=1)
         return(x)
+
+class JNet2(nn.Module):
+    def __init__(self):
+        super(JNet2, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
+                                    nn.BatchNorm2d(10),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(10,20, kernel_size=4),
+                                    nn.BatchNorm2d(20),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer3 = nn.Sequential(nn.Conv2d(20,25, kernel_size=4),
+                                    nn.BatchNorm2d(25),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.fc = nn.Linear(225, 7)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
+
+class JNet3(nn.Module):
+    def __init__(self):
+        super(JNet3, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
+                                    nn.BatchNorm2d(10),
+                                    nn.ELU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(10,20, kernel_size=4),
+                                    nn.BatchNorm2d(20),
+                                    nn.ELU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.fc = nn.Linear(1620, 7)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
+
+class JNet4(nn.Module):
+    def __init__(self):
+        super(JNet4, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=11),
+                                    nn.BatchNorm2d(10),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(10,20, kernel_size=7),
+                                    nn.BatchNorm2d(20),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.fc = nn.Linear(720, 7)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
+
+class JNet5(nn.Module):
+    def __init__(self):
+        super(JNet5, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(10,20, kernel_size=4),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.fc = nn.Linear(1620, 7)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
+
+class JNet6(nn.Module):
+    def __init__(self):
+        super(JNet6, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,3, kernel_size=5),
+                                    nn.BatchNorm2d(3),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(3,5, kernel_size=4),
+                                    nn.BatchNorm2d(5),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.fc = nn.Linear(405, 7)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
+
+class JNet7(nn.Module):
+    def __init__(self):
+        super(JNet7, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,25, kernel_size=5),
+                                    nn.BatchNorm2d(25),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(25,64, kernel_size=4),
+                                    nn.BatchNorm2d(64),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.fc = nn.Linear(5184, 7)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
+
+class JNet8(nn.Module):
+    def __init__(self):
+        super(JNet8, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
+                                    nn.BatchNorm2d(10),
+                                    nn.ReLU())
+
+        self.layer2 = nn.Sequential(nn.Conv2d(10,20, kernel_size=4),
+                                    nn.BatchNorm2d(20),
+                                    nn.ReLU())
+
+        self.fc = nn.Linear(33620, 7)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
+
+class JNet9(nn.Module):
+    def __init__(self):
+        super(JNet9, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
+                                    nn.BatchNorm2d(10),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(10,20, kernel_size=4),
+                                    nn.BatchNorm2d(20),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.fc = nn.Sequential(nn.Linear(1620, 512),
+                                nn.ReLU(),
+                                nn.Linear(512, 7))
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
+
+class JNet10(nn.Module):
+    def __init__(self):
+        super(JNet10, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,10, kernel_size=5),
+                                    nn.BatchNorm2d(10),
+                                    nn.Sigmoid(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(10,20, kernel_size=4),
+                                    nn.BatchNorm2d(20),
+                                    nn.Sigmoid(),
+                                    nn.MaxPool2d(kernel_size=2))
+
+        self.fc = nn.Linear(1620, 7)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
+
+
+
