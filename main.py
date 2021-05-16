@@ -76,13 +76,13 @@ if __name__ == '__main__':
     ###### VARIABLES TO CHANGE
     networks = [nets.JNet1(), nets.JNet2(), nets.JNet3(), nets.JNet4(), nets.JNet5(),
                 nets.JNet6(), nets.JNet7(), nets.JNet8(), nets.JNet9(), nets.JNet10()]
-    networks = [nets.JNet7()]
+    networks = [nets.JNet11()]
 
     plotData, plotResult, plotTraining, showConvolutionLayer = False, False, True, False
     saveNetwork = True
     batchsize = 25
     interval = 10
-    n_epochs = 15
+    n_epochs = 50
     learning_rate = 0.001
     decay = 1e-5
     loader_type = 'balanced' # Options: [balancedtransform, transform, balanced, normal, small]
