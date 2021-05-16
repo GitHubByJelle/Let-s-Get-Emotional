@@ -415,7 +415,6 @@ class JNet11(nn.Module):
                                     nn.Dropout2d(p=.1))
 
         self.fc = nn.Sequential(nn.Linear(5184, 2048),
-                                nn.Dropout2d(p=.1),
                                 nn.ReLU(),
                                 nn.Linear(2048,7))
 
