@@ -413,6 +413,7 @@ class JNet11(nn.Module):
                                     nn.MaxPool2d(kernel_size=2))
 
         self.fc = nn.Sequential(nn.Linear(5184, 2048),
+                                nn.Dropout(.1),
                                 nn.ReLU(),
                                 nn.Linear(2048,7))
 
@@ -425,3 +426,31 @@ class JNet11(nn.Module):
         x = F.softmax(x, dim=1)
         return(x)
 
+class JNet12(nn.Module):
+    def __init__(self):
+        super(JNet12, self).__init__()
+
+        self.layer1 = nn.Sequential(nn.Conv2d(1,25, kernel_size=5),
+                                    nn.BatchNorm2d(25),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2),
+                                    nn.Dropout2d(.1))
+
+        self.layer2 = nn.Sequential(nn.Conv2d(25,64, kernel_size=4),
+                                    nn.BatchNorm2d(64),
+                                    nn.ReLU(),
+                                    nn.MaxPool2d(kernel_size=2),
+                                    nn.Dropout2d(.1))
+
+        self.fc = nn.Sequential(nn.Linear(5184, 2048),
+                                nn.ReLU(),
+                                nn.Linear(2048,7))
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0),-1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return(x)
