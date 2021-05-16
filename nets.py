@@ -405,14 +405,12 @@ class JNet11(nn.Module):
         self.layer1 = nn.Sequential(nn.Conv2d(1,25, kernel_size=5),
                                     nn.BatchNorm2d(25),
                                     nn.ReLU(),
-                                    nn.MaxPool2d(kernel_size=2),
-                                    nn.Dropout2d(p=.1))
+                                    nn.MaxPool2d(kernel_size=2))
 
         self.layer2 = nn.Sequential(nn.Conv2d(25,64, kernel_size=4),
                                     nn.BatchNorm2d(64),
                                     nn.ReLU(),
-                                    nn.MaxPool2d(kernel_size=2),
-                                    nn.Dropout2d(p=.1))
+                                    nn.MaxPool2d(kernel_size=2))
 
         self.fc = nn.Sequential(nn.Linear(5184, 2048),
                                 nn.ReLU(),
