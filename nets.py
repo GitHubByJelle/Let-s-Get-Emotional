@@ -443,6 +443,7 @@ class JNet12(nn.Module):
                                     nn.Dropout2d(.1))
 
         self.fc = nn.Sequential(nn.Linear(5184, 2048),
+                                nn.Dropout(.1),
                                 nn.ReLU(),
                                 nn.Linear(2048,7))
 
