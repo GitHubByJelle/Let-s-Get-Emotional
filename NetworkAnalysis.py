@@ -13,7 +13,7 @@ os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 
 
 trainloader, testloader, _, _ = loaders.make_loader_small(1)
-network_path = 'ConvNet_nepoch25_lr0.001_batchsize4_loaderbalancedtransform.pth'
+network_path = 'CCNet2_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'
 
 visualiser.show_convolution_layers(network_path, trainloader)
 #

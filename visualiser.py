@@ -86,7 +86,7 @@ def plot_training(train_counter, train_losses, train_accuracy, valid_counter, va
     fig.suptitle(title)
 
     plt.savefig(fn)
-    # plt.show()
+    #plt.show()
 
 
 def show_convolution_layers(model_path, loader):
