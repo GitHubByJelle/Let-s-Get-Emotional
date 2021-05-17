@@ -93,7 +93,7 @@ def show_convolution_layers(model_path, loader):
     ### Implementation from Sovit Ranjan Rath.
     ### https://debuggercafe.com/visualizing-filters-and-feature-maps-in-convolutional-neural-networks-using-pytorch/
     ### Code has been adjusted to fit own code
-    model = torch.load(model_path)
+    model = torch.load(model_path, map_location=torch.device('cpu'))
     model.eval()
 
     # initialise weights and layers
@@ -191,7 +191,7 @@ def visualise_network(path, loader):
     data, label = dataiter.next()
 
     # Get output
-    network = torch.load(path)
+    network = torch.load(path, map_location=torch.device('cpu'))
     out = network(data)
 
     # Make visualisation
@@ -239,7 +239,7 @@ def occlusion(model, image, label, occ_size=50, occ_stride=50, occ_pixel=0.5):
 
 def visualise_important_area(network_path, loader):
     # Get network
-    network = torch.load(network_path)
+    network = torch.load(network_path, map_location=torch.device('cpu'))
 
     # Get image and label
     dataiter = iter(loader)
