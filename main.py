@@ -81,7 +81,7 @@ if __name__ == '__main__':
     """
     #networks = [nets.CCNet1(), nets.CCNet2(), nets.CCNet3(), nets.CCNet4(), nets.CCNet5(),
     #            nets.CCNet6(), nets.CCNet7(), nets.CCNet8(), nets.CCNet9(), nets.CCNet10()]
-    networks = [nets.CCNet7()]
+    networks = [nets.JNet14()]
 
 
     plotData, plotResult, plotTraining, showConvolutionLayer = False, False, True, False
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     n_epochs = 15
     learning_rate = 0.001
     decay = 1e-5
-    loader_type = 'balanced' # Options: [balancedtransform, transform, balanced, normal, small]
+    loader_type = 'small' # Options: [balancedtransform, transform, balanced, normal, small]
 
     for network in networks:
         # Define loader (normal, balanced or transform)
