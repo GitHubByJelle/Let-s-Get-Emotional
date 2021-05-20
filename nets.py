@@ -462,6 +462,15 @@ class JNet12(nn.Module):
                                 nn.ReLU(),
                                 nn.Linear(2048, 7))
 
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = x.reshape(x.size(0), -1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return (x)
+
 
 class JNet13(nn.Module):
     def __init__(self):
@@ -647,6 +656,18 @@ class JNet17(nn.Module):
                                 nn.ReLU(),
                                 nn.Linear(512, 7))
 
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
+
+        x = x.reshape(x.size(0), -1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return (x)
+
 class JNet18(nn.Module):
     def __init__(self):
         super(JNet18, self).__init__()
@@ -678,6 +699,18 @@ class JNet18(nn.Module):
         self.fc = nn.Sequential(nn.Linear(1024, 512),
                                 nn.ReLU(),
                                 nn.Linear(1024, 7))
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
+
+        x = x.reshape(x.size(0), -1)
+
+        x = self.fc(x)
+        x = F.softmax(x, dim=1)
+        return (x)
 
 
 class CCNet1(nn.Module):
