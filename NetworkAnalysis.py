@@ -32,7 +32,7 @@ os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 _, testloader, _, _ = loaders.make_loader(16)
 
 # Select models
-network_numbers = [1, 5, 8, 2, 9, 7, 13, 15]
+network_numbers = [1, 5, 8, 2, 9, 7, 13, 15, 17, 18]
 for num in network_numbers:
     # Load correct network
     network_path = 'networks/JNet{}_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'.format(num)

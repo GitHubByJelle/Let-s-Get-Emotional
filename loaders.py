@@ -189,7 +189,7 @@ def make_transform_loader(batch_size):
         data = f.readlines()
 
     data = data[1:]
-    # data = [data[i] for i in np.random.randint(0,len(data),1000)]
+    data = [data[i] for i in np.random.randint(0,len(data),1000)]
 
     # Images
     print("Extracting images...")
@@ -213,7 +213,7 @@ def make_transform_loader(batch_size):
     print("Creating train loader....")
     x_train, y_train = X[usage=='Training'], y[usage=='Training']
     transform = transforms.Compose([
-        # transforms.RandomCrop(42),
+        transforms.RandomCrop(42),
         transforms.RandomHorizontalFlip(p=0.5),
         # transforms.RandomVerticalFlip(p=0.5),
         transforms.Normalize((x_train.mean()), (x_train.std()))
