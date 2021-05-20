@@ -12,8 +12,8 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 
 
-trainloader, testloader, _, _ = loaders.make_loader_small(1)
-network_path = 'networks/JNet16_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'
+# trainloader, testloader, _, _ = loaders.make_loader_small(1)
+# network_path = 'networks/JNet15_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'
 #
 # visualiser.show_convolution_layers(network_path, trainloader)
 #
@@ -26,3 +26,18 @@ network_path = 'networks/JNet16_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'
 # visualiser.testshow(testloader,network,4,4)
 #
 # determine_performance(network, testloader)
+
+#### For different networks, print performance
+# Get loader
+_, testloader, _, _ = loaders.make_loader(16)
+
+# Select models
+network_numbers = [1, 5, 8, 2, 9, 7, 13, 15]
+for num in network_numbers:
+    # Load correct network
+    network_path = 'networks/JNet{}_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'.format(num)
+    network = torch.load(network_path, map_location=torch.device('cpu'))
+
+    # Print performance
+    print("Model {}:".format(num))
+    determine_performance(network, testloader)

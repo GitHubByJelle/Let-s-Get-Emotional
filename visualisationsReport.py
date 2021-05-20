@@ -10,3 +10,6 @@ values = df_count.pixels.tolist()
 plt.pie(values, labels=labels, autopct='%1.1f%%', startangle=-20)
 plt.axis('equal')
 plt.show()
+
+# Get number of train, test and validate images
+print(df.groupby('Usage').count())

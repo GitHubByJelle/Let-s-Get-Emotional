@@ -2,7 +2,7 @@ import torch
 import os
 import torch.nn.functional as F
 import torch.optim as optim
-from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, classification_report
 
 import loaders
 import nets
@@ -53,6 +53,8 @@ def test(network, loader, validation=True):
             accuracy))
 
 def determine_performance(network, loader):
+     classes = {0:'anger',1:'disgust',2:'fear',3:'happiness',4:'sadness',5:'surprise',6:'neutral'}
+
      network.eval()
      outputs = []
      targets = []
@@ -72,6 +74,8 @@ def determine_performance(network, loader):
                                                               recall_score(targets, outputs, average='weighted'),
                                                               f1_score(targets, outputs, average='weighted')))
 
+     print(classification_report(targets, outputs, target_names = [classes[x] for x in range(len(classes.keys()))]))
+
 if __name__ == '__main__':
     ###### VARIABLES TO CHANGE
     """
@@ -84,8 +88,8 @@ if __name__ == '__main__':
     networks = [nets.JNet14()]
 
 
-    plotData, plotResult, plotTraining, showConvolutionLayer = False, False, True, False
-    saveNetwork = True
+    plotData, plotResult, plotTraining, showConvolutionLayer = True, False, True, False
+    saveNetwork = False
     batchsize = 25
     interval = 10
     n_epochs = 15
@@ -115,7 +119,7 @@ if __name__ == '__main__':
 
         # Plot train data
         if plotData:
-            visualiser.trainshow(trainloader, 10, 10)
+            visualiser.trainshow(trainloader, 3, 4)
 
         # Define lists for loss / accuracy measures
         valid_losses = []

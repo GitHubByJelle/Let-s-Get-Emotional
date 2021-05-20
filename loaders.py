@@ -96,6 +96,7 @@ def make_balanced_loader(batch_size, printBalance=False):
     # Load dataset
     print("Loading dataset...")
     df = pd.read_csv('data/FER/fer2013.csv')
+    df = df.sample(1000)
 
     # Make TensorDataset Training
     print("Creating training set...")
@@ -279,10 +280,10 @@ def make_balanced_transform_loader(batch_size, printBalance=False):
     sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
 
     transform = transforms.Compose([
-        # transforms.RandomCrop(42),
+        transforms.RandomCrop(40),
         transforms.RandomHorizontalFlip(p=0.5),
-        # transforms.RandomVerticalFlip(p=0.5),
-        # transforms.Normalize((x_train.mean()), (x_train.std()))
+        transforms.RandomVerticalFlip(p=0.5),
+        transforms.Normalize((x_train.mean()), (x_train.std()))
     ])
     trainset = CustomTensorDataset(tensors=(x_train, y_train), transform=transform)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, sampler=sampler)
