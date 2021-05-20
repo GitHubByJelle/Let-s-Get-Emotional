@@ -696,7 +696,7 @@ class JNet18(nn.Module):
                                     nn.MaxPool2d(kernel_size=2),
                                     nn.Dropout2d(.1))
 
-        self.fc = nn.Sequential(nn.Linear(1024, 512),
+        self.fc = nn.Sequential(nn.Linear(1024, 1024),
                                 nn.ReLU(),
                                 nn.Linear(1024, 7))
 
