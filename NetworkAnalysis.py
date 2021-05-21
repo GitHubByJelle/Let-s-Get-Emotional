@@ -12,8 +12,8 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 
 # # Load part of dataset and define path
-# trainloader, testloader, _, _ = loaders.make_loader_small(1)
-network_path = 'networks/JNet1_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'
+trainloader, testloader, _, _ = loaders.make_loader_small(1)
+network_path = 'networks/JNet18_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'
 #
 # # Visualise convolution layers
 # visualiser.show_convolution_layers(network_path, trainloader)
@@ -25,8 +25,9 @@ network_path = 'networks/JNet1_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'
 # visualiser.visualise_network(network_path, trainloader)
 #
 # # Load all data and network
-_, testloader, _, _ = loaders.make_balanced_loader(16)
+# _, testloader, _, _ = loaders.make_balanced_transform_loader(16)
 network = torch.load(network_path, map_location=torch.device('cpu'))
+print(network)
 #
 # # Visualise predicting examples (true and predicted label)
 # visualiser.testshow(testloader,network,4,4)

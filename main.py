@@ -84,6 +84,7 @@ def determine_performance(network, loader):
      with torch.no_grad():
         for data, target in loader:
             output = network(data)
+            print(data.shape, type(data))
             pred = output.data.max(1, keepdim=False)[1]
 
             outputs.append(pred)
