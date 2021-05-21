@@ -8,6 +8,11 @@ from torch.utils.data import Dataset, TensorDataset
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 def make_loader(batch_size):
+    """
+    Creates a loader for the data
+    :param batch_size: size of the batches
+    :return: loader for train, test, validate and plot
+    """
     # Load dataset
     print("Loading dataset...")
     df = pd.read_csv('data/FER/fer2013.csv')
@@ -50,6 +55,12 @@ def make_loader(batch_size):
     return trainloader, valloader, testloader, plotloader
 
 def make_loader_small(batch_size, size=100):
+    """
+    Creates a smaller loader for the data (random samples data)
+    Can be used for debugging.
+    :param batch_size: size of the batches
+    :return: loader for train, test, validate and plot
+    """
     # Load dataset
     print("Loading dataset...")
     df = pd.read_csv('data/FER/fer2013.csv')
@@ -93,6 +104,12 @@ def make_loader_small(batch_size, size=100):
     return trainloader, valloader, testloader, plotloader
 
 def make_balanced_loader(batch_size, printBalance=False):
+    """
+    Creates a oversampled loader for the data
+    :param batch_size: size of the batches
+    :param printBalance: Show the proportion of every batch
+    :return: loader for train, test, validate and plot
+    """
     # Load dataset
     print("Loading dataset...")
     df = pd.read_csv('data/FER/fer2013.csv')
@@ -184,6 +201,11 @@ class CustomTensorDataset(Dataset):
         return self.tensors[0].size(0)
 
 def make_transform_loader(batch_size):
+    """
+    Creates a loader for the data that augments data
+    :param batch_size: size of the batches
+    :return: loader for train, test, validate and plot
+    """
     print("Loading dataset...")
     with open('data/FER/fer2013.csv', 'r') as f:
         data = f.readlines()
@@ -213,9 +235,9 @@ def make_transform_loader(batch_size):
     print("Creating train loader....")
     x_train, y_train = X[usage=='Training'], y[usage=='Training']
     transform = transforms.Compose([
+        transforms.RandomRotation(45,expand=True),
         transforms.RandomCrop(42),
         transforms.RandomHorizontalFlip(p=0.5),
-        # transforms.RandomVerticalFlip(p=0.5),
         transforms.Normalize((x_train.mean()), (x_train.std()))
     ])
     trainset = CustomTensorDataset(tensors=(x_train, y_train), transform=transform)
@@ -240,6 +262,12 @@ def make_transform_loader(batch_size):
     return trainloader, valloader, testloader, plotloader
 
 def make_balanced_transform_loader(batch_size, printBalance=False):
+    """
+    Creates a loader for the data that augments and oversamples the data
+    :param batch_size: size of the batches
+    :param printBalance: Show the proportion of every batch
+    :return: loader for train, test, validate and plot
+    """
     print("Loading dataset...")
     with open('data/FER/fer2013.csv', 'r') as f:
         data = f.readlines()
@@ -280,9 +308,9 @@ def make_balanced_transform_loader(batch_size, printBalance=False):
     sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
 
     transform = transforms.Compose([
-        transforms.RandomCrop(40),
+        transforms.RandomRotation(50,expand=True),
+        transforms.RandomCrop(42),
         transforms.RandomHorizontalFlip(p=0.5),
-        transforms.RandomVerticalFlip(p=0.5),
         transforms.Normalize((x_train.mean()), (x_train.std()))
     ])
     trainset = CustomTensorDataset(tensors=(x_train, y_train), transform=transform)

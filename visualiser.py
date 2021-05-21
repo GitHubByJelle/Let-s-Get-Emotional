@@ -11,6 +11,12 @@ os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 classes = {0:'anger',1:'disgust',2:'fear',3:'happiness',4:'sadness',5:'surprise',6:'neutral'}
 
 def trainshow(loader, n, m):
+    """
+    Plot the train data
+    :param loader: data loader
+    :param n: number of rows
+    :param m: number of columns
+    """
     # Get data
     dataiter = iter(loader)
     data, label = dataiter.next()
@@ -33,6 +39,13 @@ def trainshow(loader, n, m):
 
 
 def testshow(loader, network, n, m):
+    """
+    Plot the train data
+    :param loader: data loader
+    :param network: trained network
+    :param n: number of rows
+    :param m: number of columns
+    """
     # Get data
     dataiter = iter(loader)
     data, label = dataiter.next()
@@ -65,6 +78,18 @@ def testshow(loader, network, n, m):
 
 def plot_training(train_counter, train_losses, train_accuracy, valid_counter, valid_losses, valid_accuracy, title,
                   fn):
+    """
+    Plots accuracy and loss during training
+    :param train_counter: x-axis, number of batches seen
+    :param train_losses: Loss of trainset for every batches seen
+    :param train_accuracy: Accuracy of trainset for every batches seen
+    :param valid_counter: x-axis, number of batches seen
+    :param valid_losses: Loss of validationset for every batches seen
+    :param valid_accuracy: Accuracy of validationset for every batches seen
+    :param title: Title of the plot
+    :param fn: Filename (to save model)
+    :return: Saved figure (png)
+    """
     fig, ax = plt.subplots(1, 2, figsize=(15,7))
 
     # Loss function
@@ -90,9 +115,16 @@ def plot_training(train_counter, train_losses, train_accuracy, valid_counter, va
 
 
 def show_convolution_layers(model_path, loader):
+    """
+    Show feature map of every convolution layer
+    :param model_path: Path to the model
+    :param loader: Loader for data
+    :return: Visualisation of feature maps (and what happens on an image)
+    """
     ### Implementation from Sovit Ranjan Rath.
     ### https://debuggercafe.com/visualizing-filters-and-feature-maps-in-convolutional-neural-networks-using-pytorch/
     ### Code has been adjusted to fit own code
+    # Load model
     model = torch.load(model_path, map_location=torch.device('cpu'))
     model.eval()
 
@@ -129,7 +161,7 @@ def show_convolution_layers(model_path, loader):
                         conv_layers.append(child)
     print(f"Total convolutional layers: {counter}")
 
-    # take a look at the conv layers and the respective weights
+    # Take a look at the conv layers and the respective weights
     for weight, conv in zip(model_weights, conv_layers):
         # print(f"WEIGHT: {weight} \nSHAPE: {weight.shape}")
         print(f"CONV: {conv} ====> SHAPE: {weight.shape}")
@@ -198,6 +230,16 @@ def visualise_network(path, loader):
     make_dot(out, params=dict(network.named_parameters()), show_attrs=True).render(path.rstrip('.pth'), format="png")
 
 def occlusion(model, image, label, occ_size=50, occ_stride=50, occ_pixel=0.5):
+    """
+    Determine important areas in the image using
+    :param model: trained network
+    :param image: An image
+    :param label: The label it should keep track of (true label)
+    :param occ_size: Size of the occlusion window
+    :param occ_stride: Stride of the occlusion window
+    :param occ_pixel: Intensity of the color of the occlusion window
+    :return: Heatmap of occlusion
+    """
     #### Implementation from Niranjan Kumar
     #### https://towardsdatascience.com/visualizing-convolution-neural-networks-using-pytorch-3dfa8443e74e
     # get the width and height of the image
@@ -238,6 +280,12 @@ def occlusion(model, image, label, occ_size=50, occ_stride=50, occ_pixel=0.5):
     return heatmap
 
 def visualise_important_area(network_path, loader):
+    """
+    Visualises occlusion on image
+    :param network_path: Path to network
+    :param loader: Loader for data
+    :return: Image with occlusion and occlusion and image combined (using bicubic interpolation)
+    """
     # Get network
     network = torch.load(network_path, map_location=torch.device('cpu'))
 

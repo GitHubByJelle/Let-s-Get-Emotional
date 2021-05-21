@@ -2,6 +2,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 
+"""
+This file contains a lot of networks we trained and used during our search to the best network.
+Note: This are not all networks!
+"""
 
 class ExampleNet(nn.Module):
     def __init__(self):

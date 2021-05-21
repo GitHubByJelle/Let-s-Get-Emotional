@@ -10,6 +10,14 @@ import visualiser
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 def train(epoch, network, loader, interval):
+    """
+    Train network
+    :param epoch: Number of epochs
+    :param network: Network that should be trained
+    :param loader: Dataloader
+    :param interval: Interval to show results
+    :return: Trained network
+    """
     network.train()
     correct = 0
     for batch_idx, (data, target) in enumerate(loader):
@@ -29,6 +37,13 @@ def train(epoch, network, loader, interval):
     train_accuracy.append(100. * correct / len(loader.dataset))
 
 def test(network, loader, validation=True):
+    """
+    Test network
+    :param network: Network
+    :param loader: Test / validation loader
+    :param validation: True if validation, False if test (to keep track of loss and accuracy during training)
+    :return: Accuracy
+    """
     network.eval()
     test_loss = 0
     correct = 0
@@ -53,8 +68,16 @@ def test(network, loader, validation=True):
             accuracy))
 
 def determine_performance(network, loader):
+     """
+     Print performance report of network
+     :param network: Network
+     :param loader: Test loader
+     :return: Performance report
+     """
+     # Define class labels
      classes = {0:'anger',1:'disgust',2:'fear',3:'happiness',4:'sadness',5:'surprise',6:'neutral'}
 
+     # Make predictions
      network.eval()
      outputs = []
      targets = []
@@ -65,29 +88,22 @@ def determine_performance(network, loader):
 
             outputs.append(pred)
             targets.append(target)
+     # Add predictions to one tensor
      outputs = torch.cat(outputs, dim=0)
      targets = torch.cat(targets, dim=0)
 
-     print("Accuracy: {:.4f}, Precision: {:.4f}. Recall: {:.4f}. F1-score: {:.4f}.\n".format(
-                                                              accuracy_score(targets, outputs),
-                                                              precision_score(targets, outputs, average='weighted'),
-                                                              recall_score(targets, outputs, average='weighted'),
-                                                              f1_score(targets, outputs, average='weighted')))
-
+     # Print performances
      print(classification_report(targets, outputs, target_names = [classes[x] for x in range(len(classes.keys()))]))
 
+# Run training
 if __name__ == '__main__':
     ###### VARIABLES TO CHANGE
-    """
+    # Enter networks in a list
     networks = [nets.JNet1(), nets.JNet2(), nets.JNet3(), nets.JNet4(), nets.JNet5(),
                 nets.JNet6(), nets.JNet7(), nets.JNet8(), nets.JNet9(), nets.JNet10()]
-    networks = [nets.JNet11()]
-    """
-    #networks = [nets.CCNet1(), nets.CCNet2(), nets.CCNet3(), nets.CCNet4(), nets.CCNet5(),
-    #            nets.CCNet6(), nets.CCNet7(), nets.CCNet8(), nets.CCNet9(), nets.CCNet10()]
-    networks = [nets.JNet18t()]
+    networks = [nets.JNet18()]
 
-
+    # Set parameters
     plotData, plotResult, plotTraining, showConvolutionLayer = False, False, True, False
     saveNetwork = False
     batchsize = 25
@@ -97,6 +113,7 @@ if __name__ == '__main__':
     decay = 1e-5
     loader_type = 'transform' # Options: [balancedtransform, transform, balanced, normal, small]
 
+    # For every network
     for network in networks:
         # Define loader (normal, balanced or transform)
         if loader_type == 'balancedtransform': # Data will be balanced and horizontally flipped
@@ -113,7 +130,7 @@ if __name__ == '__main__':
         # Define optimizer
         optimizer = optim.Adam(network.parameters(), lr=learning_rate, weight_decay=decay)
 
-        ###### START NETWORK
+        ###### START Training
         # Show network
         print(network)
 
@@ -164,6 +181,7 @@ if __name__ == '__main__':
                                                                                    n_epochs, learning_rate, batchsize,
                                                                                    loader_type))
 
+        # Show convolution layers
         if showConvolutionLayer:
             visualiser.show_convolution_layers('training_{}_nepoch{}_lr{}_batchsize{}_loader{}.pth'.format(network.__class__.__name__ ,
                                                                                    n_epochs, learning_rate, batchsize,
