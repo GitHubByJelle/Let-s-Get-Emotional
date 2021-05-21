@@ -113,7 +113,7 @@ def make_balanced_loader(batch_size, printBalance=False):
     # Load dataset
     print("Loading dataset...")
     df = pd.read_csv('data/FER/fer2013.csv')
-    df = df.sample(1000)
+    # df = df.sample(1000)
 
     # Make TensorDataset Training
     print("Creating training set...")
@@ -211,7 +211,7 @@ def make_transform_loader(batch_size):
         data = f.readlines()
 
     data = data[1:]
-    data = [data[i] for i in np.random.randint(0,len(data),1000)]
+    # data = [data[i] for i in np.random.randint(0,len(data),1000)]
 
     # Images
     print("Extracting images...")
@@ -235,7 +235,6 @@ def make_transform_loader(batch_size):
     print("Creating train loader....")
     x_train, y_train = X[usage=='Training'], y[usage=='Training']
     transform = transforms.Compose([
-        transforms.RandomRotation(45,expand=True),
         transforms.RandomCrop(42),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.Normalize((x_train.mean()), (x_train.std()))
@@ -246,13 +245,13 @@ def make_transform_loader(batch_size):
     # Create testloader
     print("Creating test loader....")
     x_test, y_test = X[usage=='PublicTest'], y[usage=='PublicTest']
-    testset = CustomTensorDataset(tensors=(x_test, y_test), transform=None)
+    testset = CustomTensorDataset(tensors=(x_test, y_test), transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size)
 
     # Create valloader
     print("Creating validation loader....")
     x_val, y_val = X[usage=='PrivateTest'], y[usage=='PrivateTest']
-    valset = CustomTensorDataset(tensors=(x_val, y_val), transform=None)
+    valset = CustomTensorDataset(tensors=(x_val, y_val), transform=transform)
     valloader = torch.utils.data.DataLoader(valset, batch_size=batch_size)
 
     # Create plotloader
@@ -308,7 +307,6 @@ def make_balanced_transform_loader(batch_size, printBalance=False):
     sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
 
     transform = transforms.Compose([
-        transforms.RandomRotation(50,expand=True),
         transforms.RandomCrop(42),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.Normalize((x_train.mean()), (x_train.std()))
@@ -319,13 +317,13 @@ def make_balanced_transform_loader(batch_size, printBalance=False):
     # Create testloader
     print("Creating test loader....")
     x_test, y_test = X[usage=='PublicTest'], y[usage=='PublicTest']
-    testset = CustomTensorDataset(tensors=(x_test, y_test), transform=None)
+    testset = CustomTensorDataset(tensors=(x_test, y_test), transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size)
 
     # Create valloader
     print("Creating validation loader....")
     x_val, y_val = X[usage=='PrivateTest'], y[usage=='PrivateTest']
-    valset = CustomTensorDataset(tensors=(x_val, y_val), transform=None)
+    valset = CustomTensorDataset(tensors=(x_val, y_val), transform=transform)
     valloader = torch.utils.data.DataLoader(valset, batch_size=batch_size)
 
     # Create plotloader

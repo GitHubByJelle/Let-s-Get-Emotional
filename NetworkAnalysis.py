@@ -13,7 +13,7 @@ os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 
 # # Load part of dataset and define path
 # trainloader, testloader, _, _ = loaders.make_loader_small(1)
-# network_path = 'networks/JNet15_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'
+network_path = 'networks/JNet1_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'
 #
 # # Visualise convolution layers
 # visualiser.show_convolution_layers(network_path, trainloader)
@@ -25,26 +25,27 @@ os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 # visualiser.visualise_network(network_path, trainloader)
 #
 # # Load all data and network
-# _, testloader, _, _ = loaders.make_loader(16)
-# network = torch.load(network_path, map_location=torch.device('cpu'))
+_, testloader, _, _ = loaders.make_balanced_loader(16)
+network = torch.load(network_path, map_location=torch.device('cpu'))
 #
 # # Visualise predicting examples (true and predicted label)
 # visualiser.testshow(testloader,network,4,4)
 #
-# Determine performance
-# determine_performance(network, testloader)
+#Determine performance
+determine_performance(network, testloader)
 
 #### For different networks, print performance
-# Get loader
-_, testloader, _, _ = loaders.make_loader(16)
+# # Get loader
+# _, testloader, _, _ = loaders.make_loader(16)
+#
+# # Select models
+# network_numbers = [1, 5, 8, 2, 9, 7, 13, 15, 17, 18]
+# for num in network_numbers:
+#     # Load correct network
+#     network_path = 'networks/JNet{}_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'.format(num)
+#     network = torch.load(network_path, map_location=torch.device('cpu'))
+#
+#     # Print performance
+#     print("Model {}:".format(num))
+#     determine_performance(network, testloader)
 
-# Select models
-network_numbers = [1, 5, 8, 2, 9, 7, 13, 15, 17, 18]
-for num in network_numbers:
-    # Load correct network
-    network_path = 'networks/JNet{}_nepoch50_lr0.001_batchsize25_loaderbalanced.pth'.format(num)
-    network = torch.load(network_path, map_location=torch.device('cpu'))
-
-    # Print performance
-    print("Model {}:".format(num))
-    determine_performance(network, testloader)
