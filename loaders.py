@@ -54,7 +54,7 @@ def make_loader(batch_size):
     # Return loaders
     return trainloader, valloader, testloader, plotloader
 
-def make_loader_small(batch_size, size=100):
+def make_loader_small(batch_size, size=1000):
     """
     Creates a smaller loader for the data (random samples data)
     Can be used for debugging.
