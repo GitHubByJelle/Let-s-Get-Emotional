@@ -1,7 +1,16 @@
 # CV_assignment2
 Assignment 2 of CV
 
-## Files
+## File to train network with terminal
+### train.py
+Run "train.py -h" for help with input.
+-network (architecture to use) is required.
+Example: "   python train.py -network JNet1 -loader small    " (Don't forget to include -network and -loader).
+
+### camera.py
+Run "camera.py" to run file. That's it!
+
+## Files used during project (using IDE to run files)
 ### main.py
 Is used to train the networks.
 Note, the data isn't added (because it's to large to push on GitHub)
