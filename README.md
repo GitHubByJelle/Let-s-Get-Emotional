@@ -7,6 +7,9 @@ Run "train.py -h" for help with input.
 -network (architecture to use) is required.
 Example: "   python train.py -network JNet1 -loader small    " (Don't forget to include -network and -loader).
 
+Please note that; our best performing model is "python train.py -network JNet18 -loader balancedtransform"
+However, it requires longer runtimes compared to JNet1 with small loader.
+
 ### camera.py
 Run "camera.py" to run file. That's it!
 
