@@ -182,7 +182,7 @@ def show_convolution_layers(model_path, loader):
     data, label = dataiter.next()
 
     # Get images
-    img = data[0:3, :, :, :]
+    img = data[3:6, :, :, :]
 
     # pass the image through all the layers
     results = [conv_layers[0](img)]
@@ -292,11 +292,11 @@ def visualise_important_area(network_path, loader):
     # Get image and label
     dataiter = iter(loader)
     data, label = dataiter.next()
-    image = data[0][0]
-    label = int(label[0])
+    image = data[3][0]
+    label = int(label[3])
 
     # Get prediction on image
-    pred = int(network(data).data.max(1, keepdim=False)[1][0])
+    pred = int(network(data).data.max(1, keepdim=False)[1][3])
 
     # Make heatmap by using occlusion
     heatmap = occlusion(network, data, label, occ_size=7, occ_stride=3, occ_pixel=.5)

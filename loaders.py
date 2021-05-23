@@ -308,7 +308,7 @@ def make_balanced_transform_loader(batch_size, printBalance=False):
 
     transform = transforms.Compose([
         # transforms.RandomCrop(42),
-        transforms.RandomRotation(45),
+        # transforms.RandomRotation(45),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.Normalize((x_train.mean()), (x_train.std()))
     ])
