@@ -2,7 +2,7 @@ import torch
 import os
 import torch.nn.functional as F
 import torch.optim as optim
-from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, classification_report
+from sklearn.metrics import classification_report
 
 import loaders
 import nets
