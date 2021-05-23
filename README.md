@@ -5,9 +5,10 @@ Assignment 2 of CV
 ### main.py
 Is used to train the networks.
 Note, the data isn't added (because it's to large to push on GitHub)
+To change parameters (e.g. network architecture, learning rate, loadertype, nepochs, etc), go into main.py and change them at the top of __main__
 
 ### visualiser.py
-Is used to make visualisations
+Is used to make functions for visualisations
 
 ### loaders.py
 Is used to load in the data (and oversample / augment)
@@ -17,6 +18,7 @@ Is used to make architectures. Almost all the architectures made during this ass
 
 ### NetworkAnalysis.py
 Is used to analyse the network (e.g. performance, convolution layers, etc.).
+Uncomment parts u want to use (as default everything is commented, so you could only select what you want).
 
 ### VisualisationsReport.py
 Is used to make visualisations for the report
@@ -26,6 +28,7 @@ Is used to finetune an existing network (e.g. VGG, ResNet, SqueezeNet, etc).
 
 ###  camera.py
 Classifies the emotions of the user by using the camera!
+Just run the file to test it!
 
 ## Folders
 ### data
