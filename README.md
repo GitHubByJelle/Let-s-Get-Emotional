@@ -6,7 +6,7 @@ In order to create the "best-performing" model, different architectures have bee
 In addition to the assigned task, an extra implementation has been developed as a supplementary exercise. This implementation incorporates an existing frontal face detection and simultaneously invokes the designed CNN in real-time for emotion classification. This added feature has now become a standard component in the assignments.
 
 <p align="center" width="100%">
-    <img src="images\let-s-get-emotional.gif" alt="Visualisation of the NEAT algorithm collecting data for training" width="70%">
+    <img src="images\let-s-get-emotional.gif" alt="Emotion detection using the webcam" width="70%">
 </p>
 
 ## Implementation Details
