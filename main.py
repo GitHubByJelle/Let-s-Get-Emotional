@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from sklearn.metrics import classification_report
 from utils import loaders
-from utils import nets
+import nets
 from utils import visualiser
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import argparse
