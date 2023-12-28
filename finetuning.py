@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import time
 import copy
 from tqdm import tqdm
-import loaders
+from utils import loaders
 import numpy as np
 
 ## Official code from pytorch used to finetine pretrained models

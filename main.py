@@ -3,11 +3,83 @@ import os
 import torch.nn.functional as F
 import torch.optim as optim
 from sklearn.metrics import classification_report
-
-import loaders
-import nets
-import visualiser
+from utils import loaders
+from utils import nets
+from utils import visualiser
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
+import argparse
+
+"""
+Run "train.py -h" for help with input.
+-network (architecture to use) is required.
+Example: "   python train.py -network JNet1 -loader small    " (Don't forget to include -network and -loader).
+"""
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-network",
+                required=True,
+                type=str,
+                help='Network Architecture used to train',
+                choices=['Net', 'JNet1','JNet2','JNet3','JNet4','JNet5','JNet6','JNet7','JNet8','JNet9','JNet10',
+                         'JNet11','JNet12','JNet13','JNet14','JNet15','JNet16','JNet17','JNet18'])
+ap.add_argument("-lr",
+                required=False,
+                type=float,
+                help='Learning rate',
+                default=.001)
+ap.add_argument("-lt","-loadertype",
+                required=False,
+                type=str,
+                choices=['balancedtransform', 'transform', 'balanced', 'normal', 'small'],
+                default='balancedtransform',
+                help='Type of loader, oversample (balanced), augment (transform)')
+ap.add_argument("-ne","-nepchs",
+                required=False,
+                type=int,
+                help='Number of epochs',
+                default=5)
+ap.add_argument("-bs","-batchsize",
+                required=False,
+                type=int,
+                help='Batch size of the network',
+                default=150)
+ap.add_argument("-i","-interval",
+                required=False,
+                type=int,
+                help='After how many batches get intermediate results?',
+                default=10)
+ap.add_argument("-decay",
+                required=False,
+                type=float,
+                help='Decay for regularization (L2)',
+                default= 1e-5)
+ap.add_argument("-plotdata",
+                required=False,
+                type=bool,
+                help='Plot example of trainingsdata',
+                default=False)
+ap.add_argument("-plotresult",
+                required=False,
+                type=bool,
+                help='Plot example of testdata with predictions',
+                default=False)
+ap.add_argument("-plottraining",
+                required=False,
+                type=bool,
+                help='Plot loss and accuracy during training. File will be added to path.',
+                default=True)
+ap.add_argument("-showconv",
+                required=False,
+                type=bool,
+                help='Plot internal representation of the convolution layers',
+                default=False)
+ap.add_argument("-savenetwork",
+                required=False,
+                type=bool,
+                help='Save trained network to path',
+                default=False)
+args = vars(ap.parse_args())
+
 
 def train(epoch, network, loader, interval):
     """
@@ -99,91 +171,121 @@ def determine_performance(network, loader):
 # Run training
 if __name__ == '__main__':
     ###### VARIABLES TO CHANGE
-    # Enter networks in a list
-    networks = [nets.JNet1(), nets.JNet2(), nets.JNet3(), nets.JNet4(), nets.JNet5(),
-                nets.JNet6(), nets.JNet7(), nets.JNet8(), nets.JNet9(), nets.JNet10()]
-    networks = [nets.JNet18()]
+    # Get correct network
+    if args['network'] == 'Net':
+        network = nets.Net()
+    elif args['network'] == 'JNet1':
+        network = nets.JNet1()
+    elif args['network'] == 'JNet2':
+        network = nets.JNet2()
+    elif args['network'] == 'JNet3':
+        network = nets.JNet3()
+    elif args['network'] == 'JNet4':
+        network = nets.JNet4()
+    elif args['network'] == 'JNet5':
+        network = nets.JNet5()
+    elif args['network'] == 'JNet6':
+        network = nets.JNet6()
+    elif args['network'] == 'JNet7':
+        network = nets.JNet7()
+    elif args['network'] == 'JNet8':
+        network = nets.JNet8()
+    elif args['network'] == 'JNet9':
+        network = nets.JNet9()
+    elif args['network'] == 'JNet10':
+        network = nets.JNet10()
+    elif args['network'] == 'JNet11':
+        network = nets.JNet11()
+    elif args['network'] == 'JNet12':
+        network = nets.JNet12()
+    elif args['network'] == 'JNet13':
+        network = nets.JNet13()
+    elif args['network'] == 'JNet14':
+        network = nets.JNet14()
+    elif args['network'] == 'JNet15':
+        network = nets.JNet15()
+    elif args['network'] == 'JNet16':
+        network = nets.JNet16()
+    elif args['network'] == 'JNet17':
+        network = nets.JNet17()
+    elif args['network'] == 'JNet18':
+        network = nets.JNet18()
 
     # Set parameters
-    plotData, plotResult, plotTraining, showConvolutionLayer = False, False, True, False
-    saveNetwork = False
-    batchsize = 25
-    interval = 10
-    n_epochs = 15
-    learning_rate = 0.001
-    decay = 1e-5
-    loader_type = 'transform' # Options: [balancedtransform, transform, balanced, normal, small]
+    plotData, plotResult, plotTraining, showConvolutionLayer = args['plotdata'], args['plotresult'], args['plottraining'], args['showconv']
+    saveNetwork = args['savenetwork']
+    batchsize = args['bs']
+    interval = args['i']
+    n_epochs = args['ne']
+    learning_rate = args['lr']
+    decay = args['decay']
+    loader_type = args['lt']
 
-    # For every network
-    for network in networks:
-        # Define loader (normal, balanced or transform)
-        if loader_type == 'balancedtransform': # Data will be balanced and horizontally flipped
-            trainloader, valloader, testloader, plotloader = loaders.make_balanced_transform_loader(batchsize)
-        elif loader_type == 'transform': # Transform, horizontally flipped and normalized
-            trainloader, valloader, testloader, plotloader = loaders.make_transform_loader(batchsize)
-        elif loader_type == 'balanced': # Balanced dataset
-            trainloader, valloader, testloader, plotloader = loaders.make_balanced_loader(batchsize)
-        elif loader_type == 'normal': # Load the data as it is
-            trainloader, valloader, testloader, plotloader = loaders.make_loader(batchsize)
-        elif loader_type == 'small': # Small loader for tests
-            trainloader, valloader, testloader, plotloader = loaders.make_loader_small(batchsize)
+    # Define loader (normal, balanced or transform)
+    if loader_type == 'balancedtransform': # Data will be balanced and horizontally flipped
+        trainloader, valloader, testloader, plotloader = loaders.make_balanced_transform_loader(batchsize)
+    elif loader_type == 'transform': # Transform, horizontally flipped and normalized
+        trainloader, valloader, testloader, plotloader = loaders.make_transform_loader(batchsize)
+    elif loader_type == 'balanced': # Balanced dataset
+        trainloader, valloader, testloader, plotloader = loaders.make_balanced_loader(batchsize)
+    elif loader_type == 'normal': # Load the data as it is
+        trainloader, valloader, testloader, plotloader = loaders.make_loader(batchsize)
+    elif loader_type == 'small': # Small loader for tests
+        trainloader, valloader, testloader, plotloader = loaders.make_loader_small(batchsize)
 
-        # Define optimizer
-        optimizer = optim.Adam(network.parameters(), lr=learning_rate, weight_decay=decay)
+    # Define optimizer
+    optimizer = optim.Adam(network.parameters(), lr=learning_rate, weight_decay=decay)
 
-        ###### START Training
-        # Show network
-        print(network)
+    ###### START Training
+    # Show network
+    print(network)
 
-        # Plot train data
-        if plotData:
-            visualiser.trainshow(trainloader, 3, 4)
+    # Plot train data
+    if plotData:
+        visualiser.trainshow(trainloader, 3, 4)
 
-        # Define lists for loss / accuracy measures
-        valid_losses = []
-        train_losses = []
-        valid_accuracy = []
-        train_accuracy = []
-        train_counter = []
-        valid_counter = [i*len(trainloader.dataset) for i in range(n_epochs + 1)]
+    # Define lists for loss / accuracy measures
+    valid_losses = []
+    train_losses = []
+    valid_accuracy = []
+    train_accuracy = []
+    train_counter = []
+    valid_counter = [i*len(trainloader.dataset) for i in range(n_epochs + 1)]
 
-        # Train model
+    # Train model
+    test(network, valloader)
+    for epoch in range(1, n_epochs + 1):
+        train(epoch, network, trainloader, interval)
         test(network, valloader)
-        for epoch in range(1, n_epochs + 1):
-            train(epoch, network, trainloader, interval)
-            test(network, valloader)
 
-        # Test on test network
-        test(network, testloader, validation=False)
+    # Print performance
+    determine_performance(network, testloader)
 
-        # Print performance
-        determine_performance(network, testloader)
+    # Save model
+    if saveNetwork:
+        torch.save(network, '{}_nepoch{}_lr{}_batchsize{}_loader{}.pth'.format(network.__class__.__name__ ,
+                                                                               n_epochs, learning_rate, batchsize,
+                                                                               loader_type))
 
-        # Save model
-        if saveNetwork:
-            torch.save(network, '{}_nepoch{}_lr{}_batchsize{}_loader{}.pth'.format(network.__class__.__name__ ,
-                                                                                   n_epochs, learning_rate, batchsize,
-                                                                                   loader_type))
+    # Visualise test set
+    if plotResult:
+        visualiser.testshow(testloader,network,4,4)
 
-        # Visualise test set
-        if plotResult:
-            visualiser.testshow(testloader,network,4,4)
+    # Plot training progress
+    if plotTraining:
+        title = r"$\bf{""Network:""}$"       + str(network.__class__.__name__)         + ' ' * 3 + \
+            r"$\bf{""batchsize:""}$"     + str(batchsize)    + ' ' * 3 + \
+            r"$\bf{""interval:""}$"      + str(interval)     + ' ' * 3 + \
+            r"$\bf{""n-epochs:""}$"      + str(n_epochs)     + ' ' * 3 + \
+            r"$\bf{""learning-rate:""}$" + str(learning_rate)
+        visualiser.plot_training(train_counter, train_losses, train_accuracy,
+                                 valid_counter, valid_losses, valid_accuracy,
+                                 title, 'training_{}_nepoch{}_lr{}_batchsize{}_loader{}.png'.format(network.__class__.__name__ ,
+                                                                               n_epochs, learning_rate, batchsize,
+                                                                               loader_type))
 
-        # Plot training progress
-        if plotTraining:
-            title = r"$\bf{""Network:""}$"       + str(network.__class__.__name__)         + ' ' * 3 + \
-                r"$\bf{""batchsize:""}$"     + str(batchsize)    + ' ' * 3 + \
-                r"$\bf{""interval:""}$"      + str(interval)     + ' ' * 3 + \
-                r"$\bf{""n-epochs:""}$"      + str(n_epochs)     + ' ' * 3 + \
-                r"$\bf{""learning-rate:""}$" + str(learning_rate)
-            visualiser.plot_training(train_counter, train_losses, train_accuracy,
-                                     valid_counter, valid_losses, valid_accuracy,
-                                     title, 'training_{}_nepoch{}_lr{}_batchsize{}_loader{}.png'.format(network.__class__.__name__ ,
-                                                                                   n_epochs, learning_rate, batchsize,
-                                                                                   loader_type))
-
-        # Show convolution layers
-        if showConvolutionLayer:
-            visualiser.show_convolution_layers('training_{}_nepoch{}_lr{}_batchsize{}_loader{}.pth'.format(network.__class__.__name__ ,
-                                                                                   n_epochs, learning_rate, batchsize,
-                                                                                   loader_type), trainloader)
+    # Show convolution layers
+    if showConvolutionLayer:
+        visualiser.show_convolution_layers('training_{}_nepoch{}_lr{}_batchsize{}_loader{}.pth'.format(network.__class__.__name__ ,
+                                                                               n_epochs, learning_rate, batchsize,
+                                                                               loader_type), trainloader)

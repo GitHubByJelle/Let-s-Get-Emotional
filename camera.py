@@ -9,7 +9,7 @@ cap = cv2.VideoCapture(0)
 
 # Check whether user selected camera is opened successfully.
 if not (cap.isOpened()):
-    print("Could not open video device")
+    raise Exception("Could not open video device")
 
 # Recognize face
 cascPath = 'camera/haarcascade_frontalface_default.xml'
