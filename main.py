@@ -10,9 +10,9 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import argparse
 
 """
-Run "train.py -h" for help with input.
+Run "main.py -h" for help with input.
 -network (architecture to use) is required.
-Example: "   python train.py -network JNet1 -loader small    " (Don't forget to include -network and -loader).
+Example: "   python main.py -network JNet1 -loader small    " (Don't forget to include -network and -loader).
 """
 
 ap = argparse.ArgumentParser()

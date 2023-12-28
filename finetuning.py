@@ -11,6 +11,7 @@ import copy
 from tqdm import tqdm
 from utils import loaders
 import numpy as np
+import argparse
 
 ## Official code from pytorch used to finetine pretrained models
 ## https://pytorch.org/tutorials/beginner/finetuning_torchvision_models_tutorial.html
@@ -18,24 +19,55 @@ import numpy as np
 print("PyTorch Version: ",torch.__version__)
 print("Torchvision Version: ",torchvision.__version__)
 
+# Argument parser
+parser = argparse.ArgumentParser(description="Fine-tuning Script")
+
 # Models to choose from [resnet, alexnet, vgg, squeezenet, densenet]
-model_name = "squeezenet"
+parser.add_argument('-model_name',
+                    type=str,
+                    default='squeezenet',
+                    help='Choose the model [resnet, alexnet, vgg, squeezenet, densenet]')
 
 # Number of classes in the dataset
-num_classes = 7
+parser.add_argument('-num_classes',
+                    type=int,
+                    default=7,
+                    help='Number of classes in the dataset')
 
-# Batch size for training (change depending on how much memory you have)
-batch_size = 50
+# Batch size for training
+parser.add_argument('-batch_size',
+                    type=int,
+                    default=50,
+                    help='Batch size for training (change depending on available memory)')
 
 # Number of epochs to train for
-num_epochs = 15
+parser.add_argument('-num_epochs',
+                    type=int,
+                    default=15,
+                    help='Number of epochs to train for')
 
-# Flag for feature extracting. When False, we finetune the whole model,
-#   when True we only update the reshaped layer params
-feature_extract = False
+# Flag for feature extracting
+parser.add_argument('-feature_extract',
+                    type=bool,
+                    default=False,
+                    help='Flag for feature extracting. When False, finetune the whole model; when True, only update the reshaped layer params')
 
-# Dataloaders
-loader_type = 'balanced_transform' # Options: [balanced_transform, transform, normal, small]
+# Dataloader type
+parser.add_argument('-loader_type',
+                    type=str,
+                    default='balanced_transform',
+                    choices=['balanced_transform', 'transform', 'normal', 'small'], help='Dataloader type options: [balanced_transform, transform, normal, small]')
+
+# Parse arguments
+args = parser.parse_args()
+
+# Access arguments using args.model_name, args.num_classes, etc.
+model_name = args.model_name
+num_classes = args.num_classes
+batch_size = args.batch_size
+num_epochs = args.num_epochs
+feature_extract = args.feature_extract
+loader_type = args.loader_type
 
 def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False):
     since = time.time()
